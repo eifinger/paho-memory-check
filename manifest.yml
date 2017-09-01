@@ -1,0 +1,7 @@
+applications:
+- name: paho-memory-check
+  memory: 4096M
+  instances: 1
+  disk_quota: 1024M
+  command: python paho-memory-check.py
+  no-route: true

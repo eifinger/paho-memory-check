@@ -10,13 +10,12 @@ import time
 if 'VCAP_SERVICES' in os.environ:
     vcap = json.loads(os.getenv('VCAP_SERVICES'))
     print('Found VCAP_SERVICES')
-    print('This means cloud foundry. Setting wait_time to 10800')
-    wait_time = 10800
+    print('This means cloud foundry')
 elif os.path.isfile('vcap-local.json'):
     with open('vcap-local.json') as f:
         vcap = json.load(f)
         print('Found local VCAP_SERVICES')
-        print('This means dev env. Setting wait_time to 1')
+        print('This means dev env.')
 else:
     sys.exit("No vcap found")
 
@@ -57,6 +56,8 @@ def getMemoryUsage():
 ######### Application #########
 qos_levels = [0, 1, 2];
 sending_times = [10, 100, 1000, 10000, 100000];
+device_type = "SimDevice"
+device_id = "SimDevice"
 
 print(getMemoryUsage())
 print("Input File contains {} JSON Objects".format(len(jsonconf['sizes'])))

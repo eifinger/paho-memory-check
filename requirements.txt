@@ -5,6 +5,7 @@ ibmiotf==0.2.8
 idna==2.6
 iso8601==0.1.12
 paho-mqtt==1.3.0
+psutil==5.2.2
 pytz==2017.2
 requests==2.18.4
 requests-toolbelt==0.8.0

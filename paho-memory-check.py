@@ -3,6 +3,7 @@ import json
 import psutil
 import ibmiotf.application
 import uuid
+import sys
 import time
 
 # Env Setup
@@ -36,7 +37,7 @@ if os.path.isfile('jsonconf.json'):
 #Setup ibmiotf
 if not 'iotf-service' in vcap:
     sys.exit("No iotf-service in VCAP_SERVICES")
-    
+
 appClientConfig = {
     "org": vcap['iotf-service'][0]['credentials']['org'],
     "id": str(uuid.uuid4()),

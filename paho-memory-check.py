@@ -48,6 +48,12 @@ appClientConfig = {
 appClient = ibmiotf.application.Client(appClientConfig)
 appClient.connect()
 
+# Util functions
+# Get current Memory usage
+def getMemoryUsage():
+    process = psutil.Process(os.getpid())
+    return "Memory usage: {}MB".format(process.memory_info().rss/1000000)
+
 ######### Application #########
 qos_levels = [0, 1, 2];
 sending_times = [10, 100, 1000, 10000, 100000];
@@ -72,8 +78,3 @@ for sending_time in sending_times:
             print("Took {} seconds".format(time_took))
             time.sleep(1)
             print(getMemoryUsage())
-
-# Get current Memory usage
-def getMemoryUsage():
-    process = psutil.Process(os.getpid())
-    return "Memory usage: {}MB".format(process.memory_info().rss/1000000)

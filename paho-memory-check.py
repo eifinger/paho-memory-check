@@ -6,6 +6,9 @@ import uuid
 import sys
 import time
 
+messages_send = 0
+
+
 # Env Setup
 if 'VCAP_SERVICES' in os.environ:
     vcap = json.loads(os.getenv('VCAP_SERVICES'))
@@ -53,6 +56,14 @@ def getMemoryUsage():
     process = psutil.Process(os.getpid())
     return "Memory usage: {}MB".format(process.memory_info().rss/1000000)
 
+# Callback message
+class CallBackHelper():
+    def __init__(self):
+        self.messages_send = 0
+
+    def publishCallback(self):
+        self.messages_send += 1
+
 ######### Application #########
 qos_levels = [0, 1, 2];
 sending_times = [10, 100, 1000, 10000, 100000];
@@ -72,8 +83,19 @@ for sending_time in sending_times:
             t0 = time.time()
             times_interrupted = 0
             print("Starting to send messages")
+            mycallbackhelper = CallBackHelper()
             for i in range(0,sending_time):
-                appClient.publishEvent(device_type, device_id, "calculator-event", "json", jsonconf['sizes'][jsoninput], qos=qos)
+                send_success = 0
+                while(not send_success):
+                    send_success = appClient.publishEvent(device_type, device_id, "calculator-event", "json", jsonconf['sizes'][jsoninput], qos=qos,on_publish=mycallbackhelper.publishCallback)
+                    #print("sending_time: {} - messages_send: {}".format(i, messages_send))
+                    if not send_success:
+                        print("send_success is false. Trying again")
+            print("Finished queuing messages")
+            while(sending_time != mycallbackhelper.messages_send):
+                #print("sending_time: {} - messages_send: {}".format(sending_time, messages_send))
+                pass
+            #print("sending_time: {} - messages_send: {}".format(sending_time, messages_send))
             time_took = round(time.time()-t0, 3)-(10*times_interrupted)
             print("Finished sending messages")
             print("Took {} seconds".format(time_took))

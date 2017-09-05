@@ -61,7 +61,7 @@ class CallBackHelper():
     def __init__(self):
         self.messages_send = 0
 
-    def publishCallback(self):
+    def publishCallback(self, arg1,arg2,arg3):
         self.messages_send += 1
 
 ######### Application #########
@@ -84,18 +84,12 @@ for sending_time in sending_times:
             times_interrupted = 0
             print("Starting to send messages")
             mycallbackhelper = CallBackHelper()
+            appClient.client.on_publish = mycallbackhelper.publishCallback
             for i in range(0,sending_time):
-                send_success = 0
-                while(not send_success):
-                    send_success = appClient.publishEvent(device_type, device_id, "calculator-event", "json", jsonconf['sizes'][jsoninput], qos=qos,on_publish=mycallbackhelper.publishCallback)
-                    #print("sending_time: {} - messages_send: {}".format(i, messages_send))
-                    if not send_success:
-                        print("send_success is false. Trying again")
+                appClient.publishEvent(device_type, device_id, "calculator-event", "json", jsonconf['sizes'][jsoninput], qos=qos)
             print("Finished queuing messages")
             while(sending_time != mycallbackhelper.messages_send):
-                #print("sending_time: {} - messages_send: {}".format(sending_time, messages_send))
                 pass
-            #print("sending_time: {} - messages_send: {}".format(sending_time, messages_send))
             time_took = round(time.time()-t0, 3)-(10*times_interrupted)
             print("Finished sending messages")
             print("Took {} seconds".format(time_took))

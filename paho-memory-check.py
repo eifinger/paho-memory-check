@@ -82,6 +82,7 @@ for sending_time in sending_times:
             print("Messages with QoS: {}".format(qos))
             t0 = time.time()
             times_interrupted = 0
+            print("Iteration: {}_{}_{}".format(sending_time,actual_size,qos))
             print("Starting to send messages")
             mycallbackhelper = CallBackHelper()
             for i in range(0,sending_time):
